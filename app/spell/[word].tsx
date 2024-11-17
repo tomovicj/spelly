@@ -1,7 +1,8 @@
 import React from "react";
-import { Text, View, Button, TextInput } from "react-native";
+import { Text, View, TextInput, Pressable } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import * as Speech from "expo-speech";
+import styles from "@/theme/styles";
 
 export default function SpellWord() {
   const params = useLocalSearchParams<{ word?: string }>();
@@ -18,37 +19,24 @@ export default function SpellWord() {
     Speech.speak(word);
   };
 
+  if (showSolution) {
+    return <Solution word={word} text={text} />;
+  }
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 20,
-      }}
-    >
-      {showSolution ? (
-        <Solution word={word} text={text} />
-      ) : (
-        <>
-          <Text>Hear the word and type it in</Text>
-          <Button title="Press to hear the word" onPress={speak} />
-          <TextInput
-            style={{
-              height: 40,
-              width: 200,
-              borderColor: "gray",
-              borderWidth: 1,
-            }}
-            value={text}
-            onChangeText={(text) => setText(text)}
-          />
-          <Button
-            title="Submit the word"
-            onPress={() => setShowSolution(true)}
-          />
-        </>
-      )}
+    <View style={styles.container}>
+      <Text style={styles.text}>Hear the word and type it in</Text>
+      <Pressable onPress={speak} style={styles.button}>
+        <Text style={styles.buttonText}>Press to hear the word</Text>
+      </Pressable>
+      <TextInput
+        style={styles.input}
+        value={text}
+        onChangeText={(text) => setText(text)}
+      />
+      <Pressable onPress={() => setShowSolution(true)} style={styles.button}>
+        <Text style={styles.buttonText}>Submit the word</Text>
+      </Pressable>
     </View>
   );
 }
@@ -72,9 +60,9 @@ function Solution(props: { word: string; text: string }) {
 
   const [correct, letters] = checkText(props.word, props.text);
   return (
-    <>
-      <Text>{correct ? "Well done!" : ":("}</Text>
-      <Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>{correct ? "Well done!" : ":("}</Text>
+      <Text style={styles.textXL}>
         {letters.map((letter, index) => {
           return (
             <Text
@@ -88,23 +76,17 @@ function Solution(props: { word: string; text: string }) {
           );
         })}
       </Text>
-      <TextInput
-        style={{
-          height: 40,
-          width: 200,
-          borderColor: "gray",
-          borderWidth: 1,
-        }}
-        editable={false}
-      >
-        {props.text}
+      <TextInput style={styles.input} editable={false}>
+        {props.text.toUpperCase()}
       </TextInput>
-      <Button
-        title="Next"
+      <Pressable
         onPress={() => {
           router.back();
         }}
-      />
-    </>
+        style={styles.button}
+      >
+        <Text style={styles.text}>Back</Text>
+      </Pressable>
+    </View>
   );
 }

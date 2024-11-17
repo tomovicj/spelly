@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Button,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
+import styles from "@/theme/styles";
 
 export default function Index() {
   const [word, setWord] = useState<string | undefined>();
@@ -40,43 +35,26 @@ export default function Index() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={styles.container}>
         <ActivityIndicator size="large" color="#007bff" />
-        <Text>Loading...</Text>
+        <Text style={styles.text}>Loading...</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.errorText}>Error: {error}</Text>
+      <View style={styles.container}>
+        <Text style={styles.text}>Error: {error}</Text>
       </View>
     );
   }
 
   return (
-    <View>
-      <Button onPress={() => fetchData()} title="Start with spelling" />
+    <View style={styles.container}>
+      <Pressable onPress={() => fetchData()} style={styles.button}>
+        <Text style={styles.text}>Start with spelling</Text>
+      </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 16,
-    textAlign: "center",
-  },
-});
