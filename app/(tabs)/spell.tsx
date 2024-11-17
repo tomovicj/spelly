@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
 import styles from "@/theme/styles";
@@ -8,13 +14,14 @@ export default function Index() {
   const [word, setWord] = useState<string | undefined>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [wordLength, setWordLength] = useState<number>(5);
 
   const fetchData = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(
-        "https://random-word-api.herokuapp.com/word?lang=en"
+        `https://random-word-api.herokuapp.com/word?lang=en&length=${wordLength}`
       );
       const word = response.data[0];
       setWord(word);
@@ -52,6 +59,21 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Spelling</Text>
+      <Text style={styles.text}>
+        Enter the length of the word you want to spell:
+      </Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={(length) => {
+          const parsedLength = parseInt(length, 10);
+          if (isNaN(parsedLength)) setWordLength(0);
+          else setWordLength(parsedLength);
+        }}
+        value={wordLength.toString()}
+        keyboardType="numeric"
+        maxLength={2}
+      />
       <Pressable onPress={() => fetchData()} style={styles.button}>
         <Text style={styles.text}>Start with spelling</Text>
       </Pressable>
