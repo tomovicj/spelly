@@ -4,10 +4,8 @@ import { useLocalSearchParams, Link } from "expo-router";
 import * as Speech from "expo-speech";
 
 export default function SpellWord() {
-  const params = useLocalSearchParams();
-  const word: string = (
-    Array.isArray(params.word) ? params.word[0] : params.word
-  ).toUpperCase();
+  const params = useLocalSearchParams<{ word: string }>();
+  const word: string = params.word.toUpperCase();
   const [text, setText] = React.useState<string>("");
   const [showSolution, setShowSolution] = React.useState<boolean>(false);
   const speak = () => {

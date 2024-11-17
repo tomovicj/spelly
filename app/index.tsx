@@ -1,7 +1,5 @@
 import React from "react";
-import { Text, View, Button, TextInput } from "react-native";
-import * as Speech from "expo-speech";
-import { green } from "react-native-reanimated/lib/typescript/Colors";
+import { View, Button } from "react-native";
 import { Link } from "expo-router";
 
 export default function Index() {
@@ -14,14 +12,8 @@ export default function Index() {
         gap: 20,
       }}
     >
-      <Link
-        href={{
-          pathname: '/spell/[word]',
-          params: { word: "test" },
-        }}
-        asChild
-      >
-        <Button title="Take me to the test" />
+      <Link href="/spell" asChild>
+        <Button title="Take me to the spelling" />
       </Link>
     </View>
   );
