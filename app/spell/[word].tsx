@@ -1,11 +1,17 @@
 import React from "react";
 import { Text, View, Button, TextInput } from "react-native";
-import { useLocalSearchParams, Link } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import * as Speech from "expo-speech";
 
 export default function SpellWord() {
-  const params = useLocalSearchParams<{ word: string }>();
-  const word: string = params.word.toUpperCase();
+  const params = useLocalSearchParams<{ word?: string }>();
+  const word: string | undefined = params.word?.toUpperCase();
+
+  if (!word) {
+    router.replace("/spell");
+    return null;
+  }
+
   const [text, setText] = React.useState<string>("");
   const [showSolution, setShowSolution] = React.useState<boolean>(false);
   const speak = () => {
@@ -93,9 +99,12 @@ function Solution(props: { word: string; text: string }) {
       >
         {props.text}
       </TextInput>
-      <Link href="/" asChild>
-        <Button title="Next" onPress={() => {}} />
-      </Link>
+      <Button
+        title="Next"
+        onPress={() => {
+          router.back();
+        }}
+      />
     </>
   );
 }

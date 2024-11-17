@@ -1,40 +1,41 @@
 import { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
+import { router } from "expo-router";
 import axios from "axios";
 
 export default function Index() {
-  const router = useRouter();
   const [word, setWord] = useState<string | undefined>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await axios.get(
-          "https://random-word-api.herokuapp.com/word?lang=en"
-        );
-        const word = response.data[0];
-        setWord(word);
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setError(err.message || "An Axios error occurred");
-        } else {
-          setError("An unexpected error occurred");
-        }
-      } finally {
-        setLoading(false);
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(
+        "https://random-word-api.herokuapp.com/word?lang=en"
+      );
+      const word = response.data[0];
+      setWord(word);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.message || "An Axios error occurred");
+      } else {
+        setError("An unexpected error occurred");
       }
-    };
-
-    fetchData();
-  }, []);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (word !== undefined) router.replace(`/spell/${word}`);
+    if (word !== undefined) router.push(`/spell/${word}`);
   }, [word]);
 
   if (isLoading) {
@@ -54,7 +55,11 @@ export default function Index() {
     );
   }
 
-  return <View />;
+  return (
+    <View>
+      <Button onPress={() => fetchData()} title="Start with spelling" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
