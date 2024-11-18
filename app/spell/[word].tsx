@@ -50,6 +50,9 @@ function Solution(props: { word: string; text: string }) {
   const checkText = (word: string, text: string): [boolean, LetterCheck[]] => {
     let correct = true;
     const letters: LetterCheck[] = [];
+
+    if (word.length != text.length) correct = false;
+
     for (let i = 0; i < word.length; i++) {
       const isCorrectLetter = word[i] === text[i]?.toUpperCase();
       letters.push({ letter: word[i], correct: isCorrectLetter });
