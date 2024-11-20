@@ -7,56 +7,34 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import settingsConfig, { SettingConfig } from "@/settings";
+import { useSettings, Settings } from "@/context/SettingsContext";
 
-type SettingOption = {
-  id: string;
-  label: string;
-  type: "switch" | "link";
-  route?: Href;
-};
-
-const settingsOptions: SettingOption[] = [
-  { id: "1", label: "Notifications", type: "switch" },
-  { id: "2", label: "Dark Mode", type: "switch" },
-  { id: "3", label: "Privacy Policy", type: "link" },
-  { id: "4", label: "About Us", type: "link" },
-];
-
-type SettingsState = {
-  [key: string]: boolean;
-};
-
-const Settings: React.FC = () => {
+const SettingsPage = () => {
   const router = useRouter();
-  const [settings, setSettings] = useState<SettingsState>({
-    notifications: true,
-    darkMode: false,
-  });
+  const { settings, changeSetting } = useSettings();
 
-  const toggleSwitch = (key: string) => {
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const renderItem = ({ item }: { item: SettingOption }) => {
+  const renderItem = ({ item }: { item: SettingConfig }) => {
     if (item.type === "switch") {
-      const settingKey = item.label.toLowerCase().replace(" ", "");
       return (
         <View style={styles.settingItem}>
           <Text style={styles.label}>{item.label}</Text>
           <Switch
-            value={settings[settingKey]}
-            onValueChange={() => toggleSwitch(settingKey)}
+            value={settings[item.id] as boolean}
+            onValueChange={() =>
+              changeSetting(item.id, !settings[item.id] as boolean)
+            }
           />
         </View>
       );
     }
 
-    if (item.type === "link" && item.route) {
+    if (item.type === "link") {
       return (
         <TouchableOpacity
           style={styles.settingItem}
-          onPress={() => router.push(item.route!)}
+          onPress={() => router.push(item.route)}
         >
           <Text style={styles.label}>{item.label}</Text>
         </TouchableOpacity>
@@ -69,7 +47,7 @@ const Settings: React.FC = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={settingsOptions}
+        data={settingsConfig}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
@@ -96,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Settings;
+export default SettingsPage;
