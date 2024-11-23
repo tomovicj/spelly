@@ -37,7 +37,7 @@ export default function Index() {
   };
 
   useEffect(() => {
-    if (word !== undefined) router.push(`/spell/${word}`);
+    if (word !== undefined) router.push(`/spelling/spell/${word}`);
   }, [word]);
 
   if (isLoading) {
