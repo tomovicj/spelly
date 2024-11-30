@@ -1,6 +1,13 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import NGSLWords from "../words/NGSL_1.2_with_English_definitions.json";
 
+export type Word = {
+  id: number;
+  word: string;
+  definition?: string;
+  is_favorite: boolean;
+};
+
 async function migrateDbIfNeeded(db: SQLiteDatabase) {
   const DATABASE_VERSION = 1;
   const result = await db.getFirstAsync<{ user_version: number }>(
