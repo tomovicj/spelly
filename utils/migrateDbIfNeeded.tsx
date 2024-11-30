@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import getNGSLWords from "./getNGSLWords";
+import NGSLWords from "../words/NGSL_1.2_with_English_definitions.json";
 
 async function migrateDbIfNeeded(db: SQLiteDatabase) {
   const DATABASE_VERSION = 1;
@@ -31,8 +31,7 @@ async function migrateDbIfNeeded(db: SQLiteDatabase) {
         FOREIGN KEY (word_id) REFERENCES word (id)
       );
     `);
-    const NGSLwords = getNGSLWords();
-    NGSLwords.forEach(async (word) => {
+    NGSLWords.forEach(async (word) => {
       await db.runAsync(
         "INSERT INTO word (word, definiton) VALUES (?, ?)",
         word.word,
