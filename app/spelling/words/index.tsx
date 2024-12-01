@@ -10,7 +10,7 @@ import {
 import { useSQLiteContext } from "expo-sqlite";
 import { useQuery } from "@tanstack/react-query";
 import { Word } from "@/utils/migrateDbIfNeeded";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ToggleFavorite from "@/utils/ToggleFavorite";
 
@@ -47,16 +47,29 @@ const words = () => {
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemText}>{item.word}</Text>
-            <ToggleFavorite word_id={item.id}>
-              <MaterialCommunityIcons
-                name={item.is_favorite ? "star" : "star-outline"}
-                size={32}
-                color="yellow"
-              />
-            </ToggleFavorite>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/spelling/words/[word_id]",
+                params: {
+                  word_id: item.id,
+                  ...item,
+                  is_favorite: item.is_favorite ? 1 : 0,
+                },
+              })
+            }
+          >
+            <View style={styles.item}>
+              <Text style={styles.itemText}>{item.word}</Text>
+              <ToggleFavorite word_id={item.id}>
+                <MaterialCommunityIcons
+                  name={item.is_favorite ? "star" : "star-outline"}
+                  size={32}
+                  color="yellow"
+                />
+              </ToggleFavorite>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>

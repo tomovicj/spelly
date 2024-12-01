@@ -11,7 +11,7 @@ export default function indexLayout() {
       <SQLiteProvider databaseName="words.db" onInit={migrateDbIfNeeded}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="spelling/words" options={{ headerTitle: "List of words" }} />
+          <Stack.Screen name="spelling/words/index" options={{ headerTitle: "List of words" }} />
         </Stack>
       </SQLiteProvider>
     </QueryClientProvider>
