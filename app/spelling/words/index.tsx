@@ -60,14 +60,21 @@ const words = () => {
             }
           >
             <View style={styles.item}>
-              <Text style={styles.itemText}>{item.word}</Text>
-              <ToggleFavorite word_id={item.id}>
-                <MaterialCommunityIcons
-                  name={item.is_favorite ? "star" : "star-outline"}
-                  size={32}
-                  color="yellow"
-                />
-              </ToggleFavorite>
+              <View style={styles.itemLeftPart}>
+                <ToggleFavorite word_id={item.id}>
+                  <MaterialCommunityIcons
+                    name={item.is_favorite ? "star" : "star-outline"}
+                    size={32}
+                    color="yellow"
+                  />
+                </ToggleFavorite>
+                <Text style={styles.itemText}>{item.word}</Text>
+              </View>
+              <MaterialCommunityIcons
+                name="chevron-right"
+                size={32}
+                color="black"
+              />
             </View>
           </TouchableOpacity>
         )}
@@ -93,6 +100,11 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 18,
     alignSelf: "center",
+  },
+  itemLeftPart: {
+    flex: 1,
+    flexDirection: "row",
+    gap: 10,
   },
   title: {
     fontSize: 32,
