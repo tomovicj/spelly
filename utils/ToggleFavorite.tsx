@@ -1,6 +1,7 @@
 import { Pressable } from "react-native";
 import { ReactNode } from "react";
 import { useSQLiteContext } from "expo-sqlite";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ToggleFavorite = ({
   word_id,
@@ -9,6 +10,7 @@ const ToggleFavorite = ({
   word_id: number;
   children: ReactNode;
 }) => {
+  const queryClient = useQueryClient();
   const db = useSQLiteContext();
   const toggle = async () => {
     await db.runAsync(
@@ -16,7 +18,13 @@ const ToggleFavorite = ({
       word_id
     );
   };
-  return <Pressable onPress={() => toggle()}>{children}</Pressable>;
+  const mutation = useMutation({
+    mutationFn: toggle,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["words"] });
+    },
+  });
+  return <Pressable onPress={() => mutation.mutate()}>{children}</Pressable>;
 };
 
 export default ToggleFavorite;
