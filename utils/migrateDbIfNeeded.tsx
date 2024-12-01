@@ -24,7 +24,7 @@ async function migrateDbIfNeeded(db: SQLiteDatabase) {
       CREATE TABLE word (
         id INTEGER PRIMARY KEY,
         word TEXT NOT NULL UNIQUE,
-        definiton TEXT,
+        definition TEXT,
         is_favorite BOOLEAN DEFAULT 0
       );
     `);
@@ -40,7 +40,7 @@ async function migrateDbIfNeeded(db: SQLiteDatabase) {
     `);
     NGSLWords.forEach(async (word) => {
       await db.runAsync(
-        "INSERT INTO word (word, definiton) VALUES (?, ?)",
+        "INSERT INTO word (word, definition) VALUES (?, ?)",
         word.word,
         word.definition
       );
