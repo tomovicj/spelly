@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, TextInput, Pressable } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import * as Speech from "expo-speech";
+import { useAudioPlayer } from "expo-audio"
 import styles from "@/theme/styles";
 
 export default function SpellWord() {
@@ -15,8 +15,11 @@ export default function SpellWord() {
 
   const [text, setText] = React.useState<string>("");
   const [showSolution, setShowSolution] = React.useState<boolean>(false);
-  const speak = () => {
-    Speech.speak(word);
+
+  const player = useAudioPlayer("https://spelly.jovantomovic.com/audio/tiktok/" + word.toLowerCase() + ".mp3");
+  const playSound = () => {
+    player.seekTo(0);
+    player.play();
   };
 
   if (showSolution) {
@@ -26,7 +29,7 @@ export default function SpellWord() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Hear the word and type it in</Text>
-      <Pressable onPress={speak} style={styles.button}>
+      <Pressable onPress={playSound} style={styles.button}>
         <Text style={styles.buttonText}>Press to hear the word</Text>
       </Pressable>
       <TextInput
