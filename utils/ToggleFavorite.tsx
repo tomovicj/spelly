@@ -6,9 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const ToggleFavorite = ({
   word_id,
   children,
+  onPress,
 }: {
   word_id: number;
   children: ReactNode;
+  onPress?: () => void;
 }) => {
   const queryClient = useQueryClient();
   const db = useSQLiteContext();
@@ -18,13 +20,20 @@ const ToggleFavorite = ({
       word_id
     );
   };
+
   const mutation = useMutation({
     mutationFn: toggle,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["words"] });
     },
   });
-  return <Pressable onPress={() => mutation.mutate()}>{children}</Pressable>;
+
+  const handlePress = () => {
+    if (onPress) onPress();
+    mutation.mutate();
+  };
+
+  return <Pressable onPress={handlePress}>{children}</Pressable>;
 };
 
 export default ToggleFavorite;
