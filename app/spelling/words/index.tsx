@@ -23,18 +23,22 @@ const words = () => {
   if (isPending)
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007bff" />
-        <Text>Loading...</Text>
+        <ActivityIndicator
+          size="large"
+          color="#007bff"
+          style={{ marginBottom: 10 }}
+        />
+        <Text style={styles.text}>Loading...</Text>
       </View>
     );
 
   if (error)
     return (
       <View style={styles.container}>
-        <Text>An error has occurred: {error.message}</Text>
-        <Link href="/">
-          <TouchableOpacity>
-            <Text>Go back</Text>
+        <Text style={styles.text}>An error has occurred: {error.message}</Text>
+        <Link href="/" asChild>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.text}>Go back</Text>
           </TouchableOpacity>
         </Link>
       </View>
@@ -54,10 +58,20 @@ const words = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     backgroundColor: "#fff",
   },
   title: {
     fontSize: 32,
+  },
+  text: {
+    alignSelf: "center",
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 5,
+    margin: 10,
   },
 });
 
