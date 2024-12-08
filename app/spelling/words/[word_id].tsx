@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAudioPlayer } from "expo-audio";
 import { useState } from "react";
+import colors from "@/theme/colors";
 
 type Props = {
   word_id: string;
@@ -42,7 +43,7 @@ function word() {
               <MaterialCommunityIcons
                 name={isFavoriteState ? "star" : "star-outline"}
                 size={32}
-                color="yellow"
+                color={colors.accent}
               />
             </ToggleFavorite>
           ),
@@ -55,7 +56,7 @@ function word() {
             <MaterialCommunityIcons
               name="volume-high"
               size={32}
-              color="black"
+              color={colors.primary}
             />
           </TouchableOpacity>
         </View>
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: colors.neutral,
   },
   heading: {
     flexDirection: "row",
@@ -78,9 +80,11 @@ const styles = StyleSheet.create({
   word: {
     fontSize: 24,
     fontWeight: "bold",
+    color: colors.primary,
   },
   definition: {
     fontSize: 18,
+    color: colors.primary,
   },
 });
 

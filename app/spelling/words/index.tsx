@@ -13,6 +13,7 @@ import { Word } from "@/utils/migrateDbIfNeeded";
 import { Link } from "expo-router";
 import WordListRow from "@/components/WordListRow";
 import WordListFilter, { WordFilters } from "@/components/WordListFilter";
+import colors from "@/theme/colors";
 
 const words = () => {
   const [wordFilters, setWordFilters] = React.useState<WordFilters>({
@@ -69,13 +70,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.neutral,
   },
   title: {
     fontSize: 32,
   },
   text: {
     alignSelf: "center",
+    color: colors.primary,
   },
   button: {
     backgroundColor: "#007bff",

@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ToggleFavorite from "@/utils/ToggleFavorite";
 import { useRouter } from "expo-router";
 import { Word } from "@/utils/migrateDbIfNeeded";
+import colors from "@/theme/colors";
 
 const WordListRow = ({ wordData }: { wordData: Word }) => {
   const router = useRouter();
@@ -33,12 +34,12 @@ const WordListRow = ({ wordData }: { wordData: Word }) => {
             <MaterialCommunityIcons
               name={isFavoriteState ? "star" : "star-outline"}
               size={32}
-              color="yellow"
+              color={colors.accent}
             />
           </ToggleFavorite>
           <Text style={styles.wordText}>{wordData.word}</Text>
         </View>
-        <MaterialCommunityIcons name="chevron-right" size={32} color="black" />
+        <MaterialCommunityIcons name="chevron-right" size={32} color={colors.primary} />
       </View>
     </TouchableOpacity>
   );
@@ -52,11 +53,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 16,
     borderBottomWidth: 1,
-    borderColor: "black",
+    borderColor: colors.primary,
   },
   wordText: {
     fontSize: 18,
     alignSelf: "center",
+    color: colors.primary,
   },
   itemLeftPart: {
     flex: 1,

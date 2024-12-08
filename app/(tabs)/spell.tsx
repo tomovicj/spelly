@@ -1,13 +1,14 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
+import colors from "@/theme/colors";
 
 const spell = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Spelly</Text>
       <Link href="/spelling/spell/test" asChild>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={{...styles.button, backgroundColor: colors.secondary}}>
           <Text style={styles.buttonText}>Start Spelling</Text>
         </TouchableOpacity>
       </Link>
@@ -23,7 +24,7 @@ const spell = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.neutral,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -31,16 +32,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 40,
+    color: colors.primary,
   },
   button: {
-    backgroundColor: "lightblue",
+    backgroundColor: colors.primary,
     padding: 20,
     borderRadius: 5,
     margin: 10,
     width: 300,
   },
   buttonText: {
-    color: "#000",
+    color: colors.neutral,
     fontSize: 16,
     textAlign: "center",
   },

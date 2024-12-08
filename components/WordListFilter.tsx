@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { Stack } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "@/theme/colors";
 
 export type WordFilters = {
   searchText: string;
@@ -46,7 +47,7 @@ const WordListFilter = ({
         }}
       />
       {isFilterVisible && (
-        <View style={styles.heading}>
+        <View style={styles.container}>
           <TextInput
             placeholder="Search..."
             style={styles.searchBox}
@@ -70,7 +71,7 @@ const WordListFilter = ({
               <MaterialCommunityIcons
                 name="sort-alphabetical-descending"
                 size={24}
-                color="black"
+                color={colors.primary}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -86,7 +87,7 @@ const WordListFilter = ({
                 }))
               }
             >
-              <MaterialCommunityIcons name="star" size={24} color="black" />
+              <MaterialCommunityIcons name="star" size={24} color={colors.primary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -107,25 +108,31 @@ const HeaderRight = React.memo(
       <MaterialCommunityIcons
         name={isFilterVisible ? "filter" : "filter-outline"}
         size={32}
-        color="black"
+        color={colors.primary}
       />
     </Pressable>
   )
 );
 
 const styles = StyleSheet.create({
-  heading: {
+  container: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
     gap: 10,
+		backgroundColor: colors.neutral,
+		borderColor: colors.secondary,
+		borderBottomWidth: 2,
+		borderTopWidth: 2,
   },
   searchBox: {
     flex: 1,
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
-    backgroundColor: "white",
+		borderColor: colors.secondary,
+    backgroundColor: colors.neutral,
+		color: colors.primary,
   },
   toggleSection: {
     flexDirection: "row",
@@ -133,14 +140,14 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: colors.secondary,
     borderRadius: 5,
     padding: 3,
   },
   toggleButtonActive: {
     borderWidth: 1,
-    borderColor: "gray",
-    backgroundColor: "gray",
+    borderColor: colors.secondary,
+    backgroundColor: colors.secondary,
     borderRadius: 5,
     padding: 3,
   },
