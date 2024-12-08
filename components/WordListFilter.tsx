@@ -25,9 +25,6 @@ const WordListFilter = ({
   setFilters: React.Dispatch<React.SetStateAction<WordFilters>>;
 }) => {
   const [isFilterVisible, setIsFilterVisible] = React.useState<boolean>(false);
-  const [searchText, setSearchText] = React.useState<string>(
-    filters.searchText
-  );
 
   const headerRight = React.useCallback(
     () => (
@@ -51,8 +48,10 @@ const WordListFilter = ({
           <TextInput
             placeholder="Search..."
             style={styles.searchBox}
-            defaultValue={searchText}
-            onChangeText={(text) => setSearchText(text)}
+            defaultValue={filters.searchText}
+            onChangeText={(text) =>
+              setFilters((prev) => ({ ...prev, searchText: text }))
+            }
           />
           <View style={styles.toggleSection}>
             <TouchableOpacity
@@ -87,7 +86,11 @@ const WordListFilter = ({
                 }))
               }
             >
-              <MaterialCommunityIcons name="star" size={24} color={colors.primary} />
+              <MaterialCommunityIcons
+                name="star"
+                size={24}
+                color={colors.primary}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -120,19 +123,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     gap: 10,
-		backgroundColor: colors.neutral,
-		borderColor: colors.secondary,
-		borderBottomWidth: 2,
-		borderTopWidth: 2,
+    backgroundColor: colors.neutral,
+    borderColor: colors.secondary,
+    borderBottomWidth: 2,
+    borderTopWidth: 2,
   },
   searchBox: {
     flex: 1,
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
-		borderColor: colors.secondary,
+    borderColor: colors.secondary,
     backgroundColor: colors.neutral,
-		color: colors.primary,
+    color: colors.primary,
   },
   toggleSection: {
     flexDirection: "row",
