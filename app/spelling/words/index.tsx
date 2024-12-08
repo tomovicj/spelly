@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,17 +16,33 @@ import WordListFilter, { WordFilters } from "@/components/WordListFilter";
 import colors from "@/theme/colors";
 
 const words = () => {
-  const [wordFilters, setWordFilters] = React.useState<WordFilters>({
+  const [wordFilters, setWordFilters] = useState<WordFilters>({
     searchText: "",
     sortOrder: "asc",
     onlyFavorites: false,
   });
+
+  const [filteredWords, setFilteredWords] = useState<Word[]>([]);
 
   const db = useSQLiteContext();
   const { isPending, error, data } = useQuery<Word[]>({
     queryKey: ["words"],
     queryFn: () => db.getAllAsync("SELECT * FROM word ORDER BY word"),
   });
+
+  useEffect(() => {
+    if (!data) return;
+
+    const filtered = data.filter(word => {
+      if (wordFilters.onlyFavorites && !word.is_favorite) return false;
+      if (wordFilters.searchText && !word.word.includes(wordFilters.searchText.toUpperCase())) return false;
+      return true;
+    });
+
+    if (wordFilters.sortOrder === "desc") filtered.reverse();
+
+    setFilteredWords(filtered);
+  }, [data, wordFilters])
 
   if (isPending)
     return (
@@ -57,7 +73,7 @@ const words = () => {
       <WordListFilter filters={wordFilters} setFilters={setWordFilters} />
       <View style={styles.container}>
         <FlatList
-          data={data}
+          data={filteredWords}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <WordListRow wordData={item} />}
         />
