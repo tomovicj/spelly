@@ -10,10 +10,17 @@ import {
 import { useSQLiteContext } from "expo-sqlite";
 import { useQuery } from "@tanstack/react-query";
 import { Word } from "@/utils/migrateDbIfNeeded";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import WordListRow from "@/components/WordListRow";
+import WordListFilter, { WordFilters } from "@/components/WordListFilter";
 
 const words = () => {
+  const [wordFilters, setWordFilters] = React.useState<WordFilters>({
+    searchText: "",
+    sortOrder: "asc",
+    onlyFavorites: false,
+  });
+
   const db = useSQLiteContext();
   const { isPending, error, data } = useQuery<Word[]>({
     queryKey: ["words"],
@@ -45,13 +52,16 @@ const words = () => {
     );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <WordListRow wordData={item} />}
-      />
-    </View>
+    <>
+      <WordListFilter filters={wordFilters} setFilters={setWordFilters} />
+      <View style={styles.container}>
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <WordListRow wordData={item} />}
+        />
+      </View>
+    </>
   );
 };
 
