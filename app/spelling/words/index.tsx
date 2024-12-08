@@ -15,7 +15,7 @@ import WordListRow from "@/components/WordListRow";
 import WordListFilter, { WordFilters } from "@/components/WordListFilter";
 import colors from "@/theme/colors";
 
-const words = () => {
+const wordList = () => {
   const [wordFilters, setWordFilters] = useState<WordFilters>({
     searchText: "",
     sortOrder: "asc",
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default words;
+export default wordList;
