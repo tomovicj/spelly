@@ -33,6 +33,7 @@ export default function SpellWord() {
       <TextInput
         style={styles.input}
         autoCapitalize = {"characters"}
+        autoCorrect={false}
         value={text}
         onChangeText={(text) => setText(text)}
       />
