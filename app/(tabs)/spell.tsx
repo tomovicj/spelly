@@ -2,12 +2,20 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import colors from "@/theme/colors";
+import getWordForSpelling from "@/utils/getWordForSpelling";
+import { Word } from "@/utils/migrateDbIfNeeded";
+import { useSQLiteContext } from "expo-sqlite";
 
 const spell = () => {
+  const db = useSQLiteContext();
+  const [wordForSpelling, setWordForSpelling] = React.useState<Word>();
+  React.useEffect(() => {
+    getWordForSpelling(db).then((word) => setWordForSpelling(word));
+  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Spelly</Text>
-      <Link href="/spelling/spell/test" asChild>
+      <Link href={`/spelling/spell/${wordForSpelling?.word}`} asChild>
         <TouchableOpacity style={{...styles.button, backgroundColor: colors.secondary}}>
           <Text style={styles.buttonText}>Start Spelling</Text>
         </TouchableOpacity>
