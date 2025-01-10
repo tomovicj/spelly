@@ -32,6 +32,7 @@ export default function SpellWord() {
       </Pressable>
       <TextInput
         style={styles.input}
+        autoCapitalize = {"characters"}
         value={text}
         onChangeText={(text) => setText(text)}
       />
