@@ -6,6 +6,7 @@ import styles from "@/theme/styles";
 import getWordForSpelling from "@/utils/getWordForSpelling";
 import { Word } from "@/utils/migrateDbIfNeeded";
 import { useSQLiteContext } from "expo-sqlite";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function SpellWord() {
   const params = useLocalSearchParams<{ word: string }>();
@@ -14,7 +15,11 @@ export default function SpellWord() {
   const [text, setText] = React.useState<string>("");
   const [showSolution, setShowSolution] = React.useState<boolean>(false);
 
-  const player = useAudioPlayer("https://spelly.jovantomovic.com/audio/tiktok/" + word.toLowerCase() + ".mp3");
+  const player = useAudioPlayer(
+    "https://spelly.jovantomovic.com/audio/tiktok/" +
+      word.toLowerCase() +
+      ".mp3"
+  );
   const playSound = () => {
     player.seekTo(0);
     player.play();
@@ -65,6 +70,7 @@ function Solution(props: { word: string; text: string }) {
   };
 
   const db = useSQLiteContext();
+  const queryClient = useQueryClient();
 
   const [correct, letters] = checkText(props.word, props.text);
 
@@ -73,14 +79,23 @@ function Solution(props: { word: string; text: string }) {
     getWordForSpelling(db).then((word) => setNextWord(word));
   }, []);
 
-  useEffect(() => {
-    db.runAsync(
-      "INSERT INTO attempt (word_id, user_input, is_correct) VALUES ((SELECT id FROM word WHERE word = ?), ?, ?)",
-      props.word,
-      props.text.toUpperCase(),
-      correct
-    );
+  const attemptsMutation = useMutation({
+    mutationFn: async () => {
+      return await db.runAsync(
+        "INSERT INTO attempt (word_id, user_input, is_correct) VALUES ((SELECT id FROM word WHERE word = ?), ?, ?)",
+        props.word,
+        props.text.toUpperCase(),
+        correct
+      );
+    },
+    onSuccess: () => {
+      // TODO: This should be invalidated only for the current word
+      queryClient.invalidateQueries({ queryKey: ["attempts"] });
+    },
   });
+  useEffect(() => {
+    attemptsMutation.mutate();
+  }, []);
 
   return (
     <View style={styles.container}>

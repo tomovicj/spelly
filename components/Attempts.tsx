@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   FlatList,
   StyleProp,
@@ -11,6 +10,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { Attempt } from "@/utils/migrateDbIfNeeded";
 import { buildDateTime } from "@/utils/buildDateTime";
 import colors from "@/theme/colors";
+import { useQuery } from "@tanstack/react-query";
 
 const Attempts = ({
   word_id,
@@ -20,22 +20,22 @@ const Attempts = ({
   style: StyleProp<ViewStyle>;
 }) => {
   const db = useSQLiteContext();
-  const [attempts, setAttempts] = useState<Attempt[]>([]);
-  useEffect(() => {
-    (async () => {
-      const result = await db.getAllAsync<Attempt>(
+  const { isPending, error, data } = useQuery<Attempt[]>({
+    queryKey: ["attempts", word_id],
+    queryFn: () =>
+      db.getAllAsync(
         "SELECT * FROM attempt WHERE word_id = ? LIMIT 20",
         word_id
-      );
-      setAttempts(result);
-    })();
-  }, []);
+      ),
+  });
+
+  if (!data) return null;
 
   return (
     <View style={style}>
       <Text style={styles.title}>Attempts:</Text>
       <FlatList<Attempt>
-        data={attempts}
+        data={data}
         renderItem={({ item }) => <AttemptTableRow attempt={item} />}
         keyExtractor={(attempt) => String(attempt.id)}
       />
