@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Text, View, TextInput, Pressable } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { useAudioPlayer } from "expo-audio"
+import { useAudioPlayer } from "expo-audio";
 import styles from "@/theme/styles";
 import getWordForSpelling from "@/utils/getWordForSpelling";
 import { Word } from "@/utils/migrateDbIfNeeded";
@@ -32,7 +32,7 @@ export default function SpellWord() {
       </Pressable>
       <TextInput
         style={styles.input}
-        autoCapitalize = {"characters"}
+        autoCapitalize={"characters"}
         autoCorrect={false}
         value={text}
         onChangeText={(text) => setText(text)}
@@ -72,6 +72,15 @@ function Solution(props: { word: string; text: string }) {
   useEffect(() => {
     getWordForSpelling(db).then((word) => setNextWord(word));
   }, []);
+
+  useEffect(() => {
+    db.runAsync(
+      "INSERT INTO attempt (word_id, user_input, is_correct) VALUES ((SELECT id FROM word WHERE word = ?), ?, ?)",
+      props.word,
+      props.text.toUpperCase(),
+      correct
+    );
+  });
 
   return (
     <View style={styles.container}>

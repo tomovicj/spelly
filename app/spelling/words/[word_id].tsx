@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAudioPlayer } from "expo-audio";
 import { useState } from "react";
+import Attempts from "@/components/Attempts";
 import colors from "@/theme/colors";
 
 type Props = {
@@ -61,6 +62,7 @@ function word() {
           </TouchableOpacity>
         </View>
         <Text style={styles.definition}>{definition}</Text>
+        <Attempts word_id={word_id} style={styles.attempts} />
       </View>
     </>
   );
@@ -85,6 +87,9 @@ const styles = StyleSheet.create({
   definition: {
     fontSize: 18,
     color: colors.primary,
+  },
+  attempts: {
+    marginTop: 20,
   },
 });
 

@@ -8,6 +8,14 @@ export type Word = {
   is_favorite: boolean;
 };
 
+export type Attempt = {
+  id: number;
+  word_id: number;
+  user_input: string;
+  is_correct: boolean;
+  timestamp: string;
+};
+
 async function migrateDbIfNeeded(db: SQLiteDatabase) {
   const DATABASE_VERSION = 1;
   const result = await db.getFirstAsync<{ user_version: number }>(
