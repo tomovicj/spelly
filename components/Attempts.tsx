@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
-import { Attempt } from "@/utils/migrateDbIfNeeded";
+import { Attempt, Word } from "@/utils/migrateDbIfNeeded";
 import { buildDateTime } from "@/utils/buildDateTime";
 import colors from "@/theme/colors";
 import { useQuery } from "@tanstack/react-query";
@@ -29,24 +29,50 @@ const Attempts = ({
       ),
   });
 
-  if (!data) return null;
+  const { data: word, error: wordError } = useQuery<Word | null>({
+    queryKey: ["word", word_id],
+    queryFn: () => db.getFirstAsync("SELECT * FROM word WHERE id = ?", word_id),
+  });
+
+  if (error || wordError) {
+    console.error(error || wordError);
+  }
+
+  if (!data || !word) return null;
 
   return (
     <View style={style}>
       <Text style={styles.title}>Attempts:</Text>
       <FlatList<Attempt>
         data={data}
-        renderItem={({ item }) => <AttemptTableRow attempt={item} />}
+        renderItem={({ item }) => (
+          <AttemptTableRow word={word} attempt={item} />
+        )}
         keyExtractor={(attempt) => String(attempt.id)}
       />
     </View>
   );
 };
 
-const AttemptTableRow = ({ attempt }: { attempt: Attempt }) => {
+const AttemptTableRow = ({
+  word,
+  attempt,
+}: {
+  word: Word;
+  attempt: Attempt;
+}) => {
   return (
     <View style={styles.trow}>
-      <Text style={styles.text}>{attempt.user_input}</Text>
+      <Text style={styles.text}>
+        {Array.from(attempt.user_input).map((letter, index) => (
+          <Text
+            key={index}
+            style={{ color: letter === word.word[index] ? "green" : "red" }}
+          >
+            {letter}
+          </Text>
+        ))}
+      </Text>
       <Text>{buildDateTime(attempt.timestamp)}</Text>
     </View>
   );
