@@ -24,7 +24,7 @@ const Attempts = ({
     queryKey: ["attempts", word_id],
     queryFn: () =>
       db.getAllAsync(
-        "SELECT * FROM attempt WHERE word_id = ? LIMIT 20",
+        "SELECT * FROM attempt WHERE word_id = ? ORDER BY timestamp DESC LIMIT 20",
         word_id
       ),
   });
