@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { Attempt, Word } from "@/utils/migrateDbIfNeeded";
-import { buildDateTime } from "@/utils/buildDateTime";
 import colors from "@/theme/colors";
 import { useQuery } from "@tanstack/react-query";
+import ReactTimeAgo from "react-time-ago";
 
 const Attempts = ({
   word_id,
@@ -73,7 +73,12 @@ const AttemptTableRow = ({
           </Text>
         ))}
       </Text>
-      <Text>{buildDateTime(attempt.timestamp)}</Text>
+      <ReactTimeAgo
+        date={new Date(attempt.timestamp)}
+        component={({ children }: { children: string }) => (
+          <Text style={styles.text}>{children}</Text>
+        )}
+      />
     </View>
   );
 };
