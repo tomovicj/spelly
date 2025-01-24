@@ -38,7 +38,7 @@ const Attempts = ({
     console.error(error || wordError);
   }
 
-  if (!data || !word) return null;
+  if (!data || data.length == 0 || !word) return null;
 
   return (
     <View style={style}>
