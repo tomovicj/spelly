@@ -1,3 +1,5 @@
+import { Appearance } from "react-native";
+
 export type SettingsConfig = (
   | SettingsSwitchConfig
   | SettingsSingleChoiceConfig
@@ -24,7 +26,7 @@ type SettingsChoiceConfig = {
 
 const settings: SettingsConfig[] = [
   { key: "notifications", label: "Notifications", type: "switch", defaultValue: true },
-  { key: "dark_mode", label: "Dark Mode", type: "switch", defaultValue: false },
+  { key: "dark_mode", label: "Dark Mode", type: "switch", defaultValue: Appearance.getColorScheme() === "dark" },
   { key: "voice", label: "Voice", type: "single_choice", options: [{key: "en-US", label: "English (US)"}], defaultValue: "en-US" },
 ];
 
