@@ -4,6 +4,7 @@ import migrateDbIfNeeded from "@/utils/migrateDbIfNeeded";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
+import { SettingsProvider } from "@/context/SettingsContext";
 
 const queryClient = new QueryClient();
 
@@ -13,10 +14,12 @@ export default function indexLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SQLiteProvider databaseName="words.db" onInit={migrateDbIfNeeded}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="spelling/words/index" options={{ headerTitle: "List of words" }} />
-        </Stack>
+        <SettingsProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="spelling/words/index" options={{ headerTitle: "List of words" }} />
+          </Stack>
+        </SettingsProvider>
       </SQLiteProvider>
     </QueryClientProvider>
   );

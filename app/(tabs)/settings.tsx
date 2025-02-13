@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,48 +8,22 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import settingsConfig, { SettingConfig } from "@/settings";
-import { useSettings, Settings } from "@/context/SettingsContext";
+import settingsConfig, { SettingsConfig } from "@/settings";
+import { SettingsContext } from "@/context/SettingsContext";
+import SettingsItem from "@/components/SettingsItem";
+
 
 const SettingsPage = () => {
-  const router = useRouter();
-  const { settings, changeSetting } = useSettings();
-
-  const renderItem = ({ item }: { item: SettingConfig }) => {
-    if (item.type === "switch") {
-      return (
-        <View style={styles.settingItem}>
-          <Text style={styles.label}>{item.label}</Text>
-          <Switch
-            value={settings[item.id] as boolean}
-            onValueChange={() =>
-              changeSetting(item.id, !settings[item.id] as boolean)
-            }
-          />
-        </View>
-      );
-    }
-
-    if (item.type === "link") {
-      return (
-        <TouchableOpacity
-          style={styles.settingItem}
-          onPress={() => router.push(item.route)}
-        >
-          <Text style={styles.label}>{item.label}</Text>
-        </TouchableOpacity>
-      );
-    }
-
-    return null;
-  };
+  const { settings, updateSettings } = useContext(SettingsContext);
 
   return (
     <View style={styles.container}>
       <FlatList
         data={settingsConfig}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        renderItem={({ item }) => (
+          <SettingsItem id={item.key} label={item.label} type={item.type} />
+        )}
       />
     </View>
   );

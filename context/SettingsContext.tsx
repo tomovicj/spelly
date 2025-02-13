@@ -1,104 +1,45 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import listOfSettings from "@/settings";
-
-export type Settings = {
-  [key: string]: boolean | string;
-};
+import React, { createContext, ReactNode, useEffect, useState } from "react";
+import { loadSettings, saveSettings, Settings } from "@/utils/settings";
 
 type SettingsContextType = {
   settings: Settings;
-  changeSetting: (
-    key: keyof Settings,
-    value: boolean | string
-  ) => Promise<void>;
-  refreshSettings: () => Promise<void>;
+  updateSettings: (newSettings: Settings) => void;
 };
 
-const SETTINGS_KEY = "user_settings";
+export const SettingsContext = createContext<SettingsContextType>({
+  settings: {},
+  updateSettings: () => {},
+});
 
-const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined
-);
+export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+  const [settings, setSettings] = useState<Settings>({});
 
-const getDeffaultSettings = (): Settings => {
-  const deffaultSettings: Settings = {};
-  listOfSettings.forEach((setting) => {
-    if ("defaultValue" in setting) {
-      deffaultSettings[setting.id] = setting.defaultValue;
-    }
-  });
-  return deffaultSettings;
-};
-
-export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [settings, setSettings] = useState<Settings>(getDeffaultSettings());
-
-  // Load settings from AsyncStorage
+  // Load settings from storage on mount
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const savedSettings = await AsyncStorage.getItem(SETTINGS_KEY);
-        if (savedSettings) {
-          setSettings(JSON.parse(savedSettings));
-        } else {
-          await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-        }
-      } catch (error) {
-        console.error("Failed to load settings:", error);
-      }
-    };
-
-    loadSettings();
+    (async () => {
+      const loadedSettings = await loadSettings();
+      setSettings(loadedSettings);
+    })();
   }, []);
 
-  // Change a specific setting and persist to AsyncStorage
-  const changeSetting = async (
-    key: keyof Settings,
-    value: boolean | string
-  ) => {
-    try {
-      const updatedSettings = { ...settings, [key]: value };
-      setSettings(updatedSettings);
-      await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(updatedSettings));
-    } catch (error) {
-      console.error("Failed to change setting:", error);
+  // Save settings to storage whenever they change
+  useEffect(() => {
+    if (Object.keys(settings).length === 0) {
+      return;
     }
-  };
+    saveSettings(settings);
+  }, [settings]);
 
-  // Manually refresh settings
-  const refreshSettings = async () => {
-    try {
-      const savedSettings = await AsyncStorage.getItem(SETTINGS_KEY);
-      if (savedSettings) {
-        setSettings(JSON.parse(savedSettings));
-      }
-    } catch (error) {
-      console.error("Failed to refresh settings:", error);
-    }
+  const updateSettings = (newSettings: Settings) => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      ...newSettings,
+    }));
   };
 
   return (
-    <SettingsContext.Provider
-      value={{ settings, changeSetting, refreshSettings }}
-    >
+    <SettingsContext.Provider value={{ settings, updateSettings }}>
       {children}
     </SettingsContext.Provider>
   );
-};
-
-export const useSettings = (): SettingsContextType => {
-  const context = useContext(SettingsContext);
-  if (!context) {
-    throw new Error("useSettings must be used within a SettingsProvider");
-  }
-  return context;
 };

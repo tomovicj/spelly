@@ -1,34 +1,31 @@
-import { Href } from "expo-router";
-
-export type SettingConfig = (
-  | SettingSwitchConfig
-  | SettingSelectConfig
-  | SettingLinkConfig
+export type SettingsConfig = (
+  | SettingsSwitchConfig
+  | SettingsSingleChoiceConfig
 ) & {
-  id: string;
+  key: string;
   label: string;
 };
 
-type SettingSwitchConfig = {
+type SettingsSwitchConfig = {
   type: "switch";
   defaultValue: boolean;
 };
 
-type SettingSelectConfig = {
-  type: "select";
-  options: string[];
+type SettingsSingleChoiceConfig = {
+  type: "single_choice";
+  options: SettingsChoiceConfig[];
   defaultValue: string;
 };
 
-type SettingLinkConfig = {
-  type: "link";
-  route: Href;
+type SettingsChoiceConfig = {
+  key: string;
+  label: string;
 };
 
-const settings: SettingConfig[] = [
-  { id: "1", label: "Notifications", type: "switch", defaultValue: true },
-  { id: "2", label: "Dark Mode", type: "switch", defaultValue: false },
-  { id: "3", label: "Voice", type: "link", route: "/settings/voice" },
+const settings: SettingsConfig[] = [
+  { key: "notifications", label: "Notifications", type: "switch", defaultValue: true },
+  { key: "dark_mode", label: "Dark Mode", type: "switch", defaultValue: false },
+  { key: "voice", label: "Voice", type: "single_choice", options: [{key: "en-US", label: "English (US)"}], defaultValue: "en-US" },
 ];
 
 export default settings;
