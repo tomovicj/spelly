@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import { SettingsProvider } from "@/context/SettingsContext";
+import { ColorsProvider } from "@/context/ColorsContext";
 
 const queryClient = new QueryClient();
 
@@ -15,10 +16,12 @@ export default function indexLayout() {
     <QueryClientProvider client={queryClient}>
       <SQLiteProvider databaseName="words.db" onInit={migrateDbIfNeeded}>
         <SettingsProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="spelling/words/index" options={{ headerTitle: "List of words" }} />
-          </Stack>
+          <ColorsProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="spelling/words/index" options={{ headerTitle: "List of words" }} />
+            </Stack>
+          </ColorsProvider>
         </SettingsProvider>
       </SQLiteProvider>
     </QueryClientProvider>

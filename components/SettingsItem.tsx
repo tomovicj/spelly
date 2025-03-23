@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Switch, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
 import { SettingsContext } from "@/context/SettingsContext";
+import { useColors } from "@/context/ColorsContext";
 
 type SettingsItemProps = {
   id: string;
@@ -10,6 +11,7 @@ type SettingsItemProps = {
 
 const SettingsItem = (props: SettingsItemProps) => {
   const { settings, updateSettings } = useContext(SettingsContext);
+  const colors = useColors();
 
   const toggleSwitch = (key: string) => {
     updateSettings({ [key]: !settings[key] as boolean });
@@ -17,8 +19,12 @@ const SettingsItem = (props: SettingsItemProps) => {
 
   if (props.type === "single_choice") {
     return (
-      <View style={styles.settingsItem}>
-        <Text style={styles.label}>{props.label}</Text>
+      <View
+        style={{ ...styles.settingsItem, borderBottomColor: colors.secondary }}
+      >
+        <Text style={{ ...styles.label, color: colors.neutral }}>
+          {props.label}
+        </Text>
       </View>
     );
   }
@@ -26,11 +32,15 @@ const SettingsItem = (props: SettingsItemProps) => {
   if (props.type === "switch") {
     return (
       <TouchableOpacity
-        style={styles.settingsItem}
+        style={{ ...styles.settingsItem, borderBottomColor: colors.secondary }}
         onPress={() => toggleSwitch(props.id)}
       >
-        <Text style={styles.label}>{props.label}</Text>
+        <Text style={{ ...styles.label, color: colors.neutral }}>
+          {props.label}
+        </Text>
         <Switch
+          trackColor={{ false: colors.neutral, true: colors.accent }}
+          thumbColor={colors.secondary}
           value={settings[props.id] as boolean}
           onValueChange={() => toggleSwitch(props.id)}
         />
@@ -42,18 +52,12 @@ const SettingsItem = (props: SettingsItemProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
   settingsItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   label: {
     fontSize: 16,

@@ -1,10 +1,11 @@
 import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "@/theme/colors";
+import { useColors } from "@/context/ColorsContext";
 
 export default function RootLayout() {
+  const colors = useColors();
   return (
-    <Tabs screenOptions={{tabBarActiveTintColor: colors.secondary}}>
+    <Tabs screenOptions={{tabBarActiveTintColor: colors.secondary, tabBarInactiveTintColor: colors.neutral, tabBarStyle: {backgroundColor: colors.primary, borderColor: colors.secondary}}}>
       <Tabs.Screen
         name="spell"
         options={{
