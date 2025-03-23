@@ -4,13 +4,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ToggleFavorite from "@/utils/ToggleFavorite";
 import { useRouter } from "expo-router";
 import { Word } from "@/utils/migrateDbIfNeeded";
-import colors from "@/theme/colors";
+import { useColors } from "@/context/ColorsContext";
 
 const WordListRow = ({ wordData }: { wordData: Word }) => {
   const router = useRouter();
   const [isFavoriteState, setIsFavoriteState] = React.useState<boolean>(
     wordData.is_favorite
   );
+  const colors = useColors();
 
   return (
     <TouchableOpacity
@@ -25,7 +26,7 @@ const WordListRow = ({ wordData }: { wordData: Word }) => {
         })
       }
     >
-      <View style={styles.item}>
+      <View style={{ ...styles.item, borderBottomColor: colors.secondary }}>
         <View style={styles.itemLeftPart}>
           <ToggleFavorite
             word_id={wordData.id}
@@ -37,9 +38,15 @@ const WordListRow = ({ wordData }: { wordData: Word }) => {
               color={colors.accent}
             />
           </ToggleFavorite>
-          <Text style={styles.wordText}>{wordData.word}</Text>
+          <Text style={{ ...styles.wordText, color: colors.neutral }}>
+            {wordData.word}
+          </Text>
         </View>
-        <MaterialCommunityIcons name="chevron-right" size={32} color={colors.primary} />
+        <MaterialCommunityIcons
+          name="chevron-right"
+          size={32}
+          color={colors.secondary}
+        />
       </View>
     </TouchableOpacity>
   );
@@ -53,12 +60,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 16,
     borderBottomWidth: 1,
-    borderColor: colors.primary,
   },
   wordText: {
     fontSize: 18,
     alignSelf: "center",
-    color: colors.primary,
   },
   itemLeftPart: {
     flex: 1,

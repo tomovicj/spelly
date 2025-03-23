@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAudioPlayer } from "expo-audio";
 import { useState } from "react";
 import Attempts from "@/components/Attempts";
-import colors from "@/theme/colors";
+import { useColors } from "@/context/ColorsContext";
 
 type Props = {
   word_id: string;
@@ -31,6 +31,8 @@ function word() {
     player.play();
   };
 
+  const colors = useColors();
+
   return (
     <>
       <Stack.Screen
@@ -50,18 +52,20 @@ function word() {
           ),
         }}
       />
-      <View style={styles.container}>
+      <View style={{ ...styles.container, backgroundColor: colors.primary }}>
         <View style={styles.heading}>
-          <Text style={styles.word}>{word}</Text>
+          <Text style={{ ...styles.word, color: colors.neutral }}>{word}</Text>
           <TouchableOpacity onPress={playSound}>
             <MaterialCommunityIcons
               name="volume-high"
               size={32}
-              color={colors.primary}
+              color={colors.neutral}
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.definition}>{definition}</Text>
+        <Text style={{ ...styles.definition, color: colors.neutral }}>
+          {definition}
+        </Text>
         <Attempts word_id={word_id} style={styles.attempts} />
       </View>
     </>
@@ -72,7 +76,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: colors.neutral,
   },
   heading: {
     flexDirection: "row",
@@ -82,11 +85,9 @@ const styles = StyleSheet.create({
   word: {
     fontSize: 24,
     fontWeight: "bold",
-    color: colors.primary,
   },
   definition: {
     fontSize: 18,
-    color: colors.primary,
   },
   attempts: {
     marginTop: 20,

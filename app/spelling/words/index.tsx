@@ -13,7 +13,7 @@ import { Word } from "@/utils/migrateDbIfNeeded";
 import { Link } from "expo-router";
 import WordListRow from "@/components/WordListRow";
 import WordListFilter, { WordFilters } from "@/components/WordListFilter";
-import colors from "@/theme/colors";
+import { useColors } from "@/context/ColorsContext";
 
 const wordList = () => {
   const [wordFilters, setWordFilters] = useState<WordFilters>({
@@ -29,6 +29,8 @@ const wordList = () => {
     queryKey: ["words"],
     queryFn: () => db.getAllAsync("SELECT * FROM word ORDER BY word"),
   });
+
+  const colors = useColors();
 
   useEffect(() => {
     if (!data) return;
@@ -46,23 +48,23 @@ const wordList = () => {
 
   if (isPending)
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, backgroundColor: colors.primary}}>
         <ActivityIndicator
           size="large"
-          color="#007bff"
+          color={colors.secondary}
           style={{ marginBottom: 10 }}
         />
-        <Text style={styles.text}>Loading...</Text>
+        <Text style={{...styles.text, color: colors.neutral}}>Loading...</Text>
       </View>
     );
 
   if (error)
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>An error has occurred: {error.message}</Text>
+      <View style={{...styles.container, backgroundColor: colors.primary}}>
+        <Text style={{...styles.text, color: colors.neutral}}>An error has occurred: {error.message}</Text>
         <Link href="/" asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>Go back</Text>
+          <TouchableOpacity style={{...styles.button, backgroundColor: colors.secondary}}>
+            <Text style={{...styles.text, color: colors.neutral}}>Go back</Text>
           </TouchableOpacity>
         </Link>
       </View>
@@ -71,7 +73,7 @@ const wordList = () => {
   return (
     <>
       <WordListFilter filters={wordFilters} setFilters={setWordFilters} />
-      <View style={styles.container}>
+      <View style={{...styles.container, backgroundColor: colors.primary}}>
         <FlatList
           data={filteredWords}
           keyExtractor={(item) => item.id.toString()}
@@ -86,17 +88,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.neutral,
   },
   title: {
     fontSize: 32,
   },
   text: {
     alignSelf: "center",
-    color: colors.primary,
   },
   button: {
-    backgroundColor: "#007bff",
     padding: 10,
     borderRadius: 5,
     margin: 10,

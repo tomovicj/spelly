@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Pressable,
   TextInput,
   TouchableOpacity,
@@ -9,7 +8,7 @@ import {
 import React from "react";
 import { Stack } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "@/theme/colors";
+import { useColors } from "@/context/ColorsContext";
 
 export type WordFilters = {
   searchText: string;
@@ -36,6 +35,8 @@ const WordListFilter = ({
     [isFilterVisible]
   );
 
+  const colors = useColors();
+
   return (
     <>
       <Stack.Screen
@@ -44,10 +45,22 @@ const WordListFilter = ({
         }}
       />
       {isFilterVisible && (
-        <View style={styles.container}>
+        <View
+          style={{
+            ...styles.container,
+            backgroundColor: colors.primary,
+            borderColor: colors.secondary,
+          }}
+        >
           <TextInput
             placeholder="Search..."
-            style={styles.searchBox}
+            placeholderTextColor={colors.secondary}
+            style={{
+              ...styles.searchBox,
+              backgroundColor: colors.primary,
+              color: colors.neutral,
+              borderColor: colors.secondary,
+            }}
             defaultValue={filters.searchText}
             onChangeText={(text) =>
               setFilters((prev) => ({ ...prev, searchText: text }))
@@ -55,11 +68,12 @@ const WordListFilter = ({
           />
           <View style={styles.toggleSection}>
             <TouchableOpacity
-              style={
-                filters.sortOrder === "desc"
-                  ? styles.toggleButtonActive
-                  : styles.toggleButton
-              }
+              style={{
+                ...{ ...styles.toggleButton, borderColor: colors.secondary },
+                ...(filters.sortOrder === "desc"
+                  ? { backgroundColor: colors.secondary }
+                  : {}),
+              }}
               onPress={() =>
                 setFilters((prev) => ({
                   ...prev,
@@ -70,15 +84,16 @@ const WordListFilter = ({
               <MaterialCommunityIcons
                 name="sort-alphabetical-descending"
                 size={24}
-                color={colors.primary}
+                color={colors.neutral}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={
-                filters.onlyFavorites
-                  ? styles.toggleButtonActive
-                  : styles.toggleButton
-              }
+              style={{
+                ...{ ...styles.toggleButton, borderColor: colors.secondary },
+                ...(filters.onlyFavorites
+                  ? { backgroundColor: colors.secondary }
+                  : {}),
+              }}
               onPress={() =>
                 setFilters((prev) => ({
                   ...prev,
@@ -89,7 +104,7 @@ const WordListFilter = ({
               <MaterialCommunityIcons
                 name="star"
                 size={24}
-                color={colors.primary}
+                color={colors.neutral}
               />
             </TouchableOpacity>
           </View>
@@ -106,15 +121,18 @@ const HeaderRight = React.memo(
   }: {
     isFilterVisible: boolean;
     onPress: () => void;
-  }) => (
-    <Pressable onPress={onPress}>
-      <MaterialCommunityIcons
-        name={isFilterVisible ? "filter" : "filter-outline"}
-        size={32}
-        color={colors.primary}
-      />
-    </Pressable>
-  )
+  }) => {
+    const colors = useColors();
+    return (
+      <Pressable onPress={onPress}>
+        <MaterialCommunityIcons
+          name={isFilterVisible ? "filter" : "filter-outline"}
+          size={32}
+          color={colors.neutral}
+        />
+      </Pressable>
+    );
+  }
 );
 
 const styles = StyleSheet.create({
@@ -123,8 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     gap: 10,
-    backgroundColor: colors.neutral,
-    borderColor: colors.secondary,
     borderBottomWidth: 2,
     borderTopWidth: 2,
   },
@@ -133,9 +149,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
-    borderColor: colors.secondary,
-    backgroundColor: colors.neutral,
-    color: colors.primary,
   },
   toggleSection: {
     flexDirection: "row",
@@ -143,14 +156,6 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     borderWidth: 1,
-    borderColor: colors.secondary,
-    borderRadius: 5,
-    padding: 3,
-  },
-  toggleButtonActive: {
-    borderWidth: 1,
-    borderColor: colors.secondary,
-    backgroundColor: colors.secondary,
     borderRadius: 5,
     padding: 3,
   },

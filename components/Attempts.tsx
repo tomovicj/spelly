@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { Attempt, Word } from "@/utils/migrateDbIfNeeded";
-import colors from "@/theme/colors";
 import { useQuery } from "@tanstack/react-query";
 import ReactTimeAgo from "react-time-ago";
+import { useColors } from "@/context/ColorsContext";
 
 const Attempts = ({
   word_id,
@@ -34,6 +34,8 @@ const Attempts = ({
     queryFn: () => db.getFirstAsync("SELECT * FROM word WHERE id = ?", word_id),
   });
 
+  const colors = useColors();
+
   if (error || wordError) {
     console.error(error || wordError);
   }
@@ -42,7 +44,7 @@ const Attempts = ({
 
   return (
     <View style={style}>
-      <Text style={styles.title}>Attempts:</Text>
+      <Text style={{ ...styles.title, color: colors.neutral }}>Attempts:</Text>
       <FlatList<Attempt>
         data={data}
         renderItem={({ item }) => (
@@ -61,9 +63,10 @@ const AttemptTableRow = ({
   word: Word;
   attempt: Attempt;
 }) => {
+  const colors = useColors();
   return (
-    <View style={styles.trow}>
-      <Text style={styles.text}>
+    <View style={{ ...styles.trow, borderTopColor: colors.secondary }}>
+      <Text style={{ color: colors.neutral }}>
         {Array.from(attempt.user_input).map((letter, index) => (
           <Text
             key={index}
@@ -76,7 +79,7 @@ const AttemptTableRow = ({
       <ReactTimeAgo
         date={new Date(attempt.timestamp)}
         component={({ children }: { children: string }) => (
-          <Text style={styles.text}>{children}</Text>
+          <Text style={{ color: colors.neutral }}>{children}</Text>
         )}
       />
     </View>
@@ -91,16 +94,11 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingBottom: 3,
     borderTopWidth: 1,
-    borderTopColor: colors.primary,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: colors.primary,
     marginBottom: 5,
-  },
-  text: {
-    color: colors.primary,
   },
 });
 
